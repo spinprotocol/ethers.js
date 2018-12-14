@@ -218,7 +218,14 @@ export class JsonRpcProvider extends BaseProvider {
         errors.checkNew(this, JsonRpcProvider);
 
         // Default URL
-        if (!url) { url = 'http://localhost:8545'; }
+        if (!url) {
+            if (this.network.name === getNetwork('klaytn').name
+                || this.network.name === getNetwork('aspen').name) {
+                url = 'http://localhost:8551'; 
+            } else {
+                url = 'http://localhost:8545'; 
+            }
+        }
 
         if (typeof(url) === 'string') {
             this.connection = {

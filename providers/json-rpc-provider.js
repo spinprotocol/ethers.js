@@ -206,7 +206,13 @@ var JsonRpcProvider = /** @class */ (function (_super) {
         errors.checkNew(_this, JsonRpcProvider);
         // Default URL
         if (!url) {
-            url = 'http://localhost:8545';
+            if (_this.network.name === networks_1.getNetwork('klaytn').name
+                || _this.network.name === networks_1.getNetwork('aspen').name) {
+                url = 'http://localhost:8551';
+            }
+            else {
+                url = 'http://localhost:8545';
+            }
         }
         if (typeof (url) === 'string') {
             _this.connection = {

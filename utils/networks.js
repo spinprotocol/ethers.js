@@ -35,6 +35,14 @@ function etcDefaultProvider(url, network) {
         return null;
     };
 }
+function klaytnDefaultProvider(url, network) {
+    return function (providers) {
+        if (providers.JsonRpcProvider) {
+            return new providers.JsonRpcProvider(url, network);
+        }
+        return null;
+    };
+}
 var homestead = {
     chainId: 1,
     ensAddress: "0x314159265dd8dbb310642f98f50c066173c1259b",
@@ -80,6 +88,16 @@ var networks = {
         chainId: 62,
         name: 'classicTestnet',
         _defaultProvider: etcDefaultProvider('https://web3.gastracker.io/morden', 'classicTestnet')
+    },
+    klaytn: {
+        chainId: 1000,
+        name: 'klaytn',
+        _defaultProvider: klaytnDefaultProvider('http://localhost:8551', 'klaytn')
+    },
+    aspen: {
+        chainId: 1000,
+        name: 'aspen',
+        _defaultProvider: klaytnDefaultProvider('http://localhost:8551', 'aspen')
     }
 };
 /**
