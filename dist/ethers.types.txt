@@ -198,12 +198,11 @@ declare module 'ethers/providers' {
     import { FallbackProvider } from 'ethers/providers/fallback-provider';
     import { IpcProvider } from 'ethers/providers/ipc-provider';
     import { InfuraProvider } from 'ethers/providers/infura-provider';
-    import { KlaytnProvider } from 'ethers/providers/klaytn-provider';
     import { JsonRpcProvider, JsonRpcSigner } from 'ethers/providers/json-rpc-provider';
     import { Web3Provider } from 'ethers/providers/web3-provider';
     import { Block, BlockTag, EventType, Filter, Log, Listener, TransactionReceipt, TransactionRequest, TransactionResponse } from 'ethers/providers/abstract-provider';
     import { AsyncSendable } from 'ethers/providers/web3-provider';
-    export { Provider, BaseProvider, FallbackProvider, EtherscanProvider, InfuraProvider, KlaytnProvider, JsonRpcProvider, Web3Provider, IpcProvider, JsonRpcSigner, Block, BlockTag, EventType, Filter, Log, Listener, TransactionReceipt, TransactionRequest, TransactionResponse, AsyncSendable };
+    export { Provider, BaseProvider, FallbackProvider, EtherscanProvider, InfuraProvider, JsonRpcProvider, Web3Provider, IpcProvider, JsonRpcSigner, Block, BlockTag, EventType, Filter, Log, Listener, TransactionReceipt, TransactionRequest, TransactionResponse, AsyncSendable };
 }
 
 declare module 'ethers/utils' {
@@ -211,7 +210,7 @@ declare module 'ethers/utils' {
     import { getAddress, getContractAddress, getIcapAddress } from 'ethers/utils/address';
     import * as base64 from 'ethers/utils/base64';
     import { BigNumber, bigNumberify } from 'ethers/utils/bignumber';
-    import { arrayify, concat, hexDataSlice, hexDataLength, hexlify, hexStripZeros, hexZeroPad, joinSignature, padZeros, splitSignature, stripZeros } from 'ethers/utils/bytes';
+    import { arrayify, concat, hexDataSlice, hexDataLength, hexlify, hexStripZeros, hexZeroPad, isHexString, joinSignature, padZeros, splitSignature, stripZeros } from 'ethers/utils/bytes';
     import { hashMessage, id, namehash } from 'ethers/utils/hash';
     import * as HDNode from 'ethers/utils/hdnode';
     import { Interface } from 'ethers/utils/interface';
@@ -241,7 +240,7 @@ declare module 'ethers/utils' {
     import { ConnectionInfo, OnceBlockable, PollOptions } from 'ethers/utils/web';
     import { EncryptOptions, ProgressCallback } from 'ethers/utils/secret-storage';
     import { Wordlist } from 'ethers/utils/wordlist';
-    export { AbiCoder, defaultAbiCoder, formatSignature, formatParamType, parseSignature, parseParamType, RLP, fetchJson, getNetwork, checkProperties, deepCopy, defineReadOnly, resolveProperties, shallowCopy, arrayify, concat, padZeros, stripZeros, HDNode, SigningKey, Interface, base64, BigNumber, bigNumberify, hexlify, hexStripZeros, hexZeroPad, hexDataLength, hexDataSlice, toUtf8Bytes, toUtf8String, formatBytes32String, parseBytes32String, hashMessage, namehash, id, getAddress, getIcapAddress, getContractAddress, formatEther, parseEther, formatUnits, parseUnits, commify, keccak256, sha256, randomBytes, solidityPack, solidityKeccak256, soliditySha256, splitSignature, joinSignature, parseTransaction, populateTransaction, serializeTransaction, getJsonWalletAddress, computeAddress, computePublicKey, recoverAddress, recoverPublicKey, verifyMessage, SupportedAlgorithms, UnicodeNormalizationForm, CoerceFunc, EventFragment, FunctionFragment, ParamType, BigNumberish, Arrayish, Hexable, Signature, Indexed, DeployDescription, EventDescription, FunctionDescription, LogDescription, TransactionDescription, Network, Networkish, Transaction, UnsignedTransaction, ConnectionInfo, OnceBlockable, PollOptions, EncryptOptions, ProgressCallback, Wordlist, };
+    export { AbiCoder, defaultAbiCoder, formatSignature, formatParamType, parseSignature, parseParamType, RLP, fetchJson, getNetwork, checkProperties, deepCopy, defineReadOnly, resolveProperties, shallowCopy, arrayify, concat, padZeros, stripZeros, HDNode, SigningKey, Interface, base64, BigNumber, bigNumberify, hexlify, isHexString, hexStripZeros, hexZeroPad, hexDataLength, hexDataSlice, toUtf8Bytes, toUtf8String, formatBytes32String, parseBytes32String, hashMessage, namehash, id, getAddress, getIcapAddress, getContractAddress, formatEther, parseEther, formatUnits, parseUnits, commify, keccak256, sha256, randomBytes, solidityPack, solidityKeccak256, soliditySha256, splitSignature, joinSignature, parseTransaction, populateTransaction, serializeTransaction, getJsonWalletAddress, computeAddress, computePublicKey, recoverAddress, recoverPublicKey, verifyMessage, SupportedAlgorithms, UnicodeNormalizationForm, CoerceFunc, EventFragment, FunctionFragment, ParamType, BigNumberish, Arrayish, Hexable, Signature, Indexed, DeployDescription, EventDescription, FunctionDescription, LogDescription, TransactionDescription, Network, Networkish, Transaction, UnsignedTransaction, ConnectionInfo, OnceBlockable, PollOptions, EncryptOptions, ProgressCallback, Wordlist, };
 }
 
 declare module 'ethers/wordlists' {
@@ -263,7 +262,7 @@ declare module 'ethers/utils/shims' {
 }
 
 declare module 'ethers/_version' {
-    export const version = "4.0.18";
+    export const version = "4.0.19";
 }
 
 declare module 'ethers/utils/bignumber' {
@@ -274,6 +273,7 @@ declare module 'ethers/utils/bignumber' {
         constructor(value: BigNumberish);
         fromTwos(value: number): BigNumber;
         toTwos(value: number): BigNumber;
+        abs(): BigNumber;
         add(other: BigNumberish): BigNumber;
         sub(other: BigNumberish): BigNumber;
         div(other: BigNumberish): BigNumber;
@@ -501,7 +501,7 @@ declare module 'ethers/providers/abstract-provider' {
     export type TransactionRequest = {
         to?: string | Promise<string>;
         from?: string | Promise<string>;
-        nonce?: number | string | Promise<number | string>;
+        nonce?: BigNumberish | Promise<BigNumberish>;
         gasLimit?: BigNumberish | Promise<BigNumberish>;
         gasPrice?: BigNumberish | Promise<BigNumberish>;
         data?: Arrayish | Promise<Arrayish>;
@@ -811,18 +811,6 @@ declare module 'ethers/providers/infura-provider' {
     import { JsonRpcProvider, JsonRpcSigner } from 'ethers/providers/json-rpc-provider';
     import { Networkish } from 'ethers/utils/networks';
     export class InfuraProvider extends JsonRpcProvider {
-        readonly apiAccessToken: string;
-        constructor(network?: Networkish, apiAccessToken?: string);
-        protected _startPending(): void;
-        getSigner(address?: string): JsonRpcSigner;
-        listAccounts(): Promise<Array<string>>;
-    }
-}
-
-declare module 'ethers/providers/klaytn-provider' {
-    import { JsonRpcProvider, JsonRpcSigner } from 'ethers/providers/json-rpc-provider';
-    import { Networkish } from 'ethers/utils/networks';
-    export class KlaytnProvider extends JsonRpcProvider {
         readonly apiAccessToken: string;
         constructor(network?: Networkish, apiAccessToken?: string);
         protected _startPending(): void;
