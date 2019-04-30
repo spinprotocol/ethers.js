@@ -11811,6 +11811,7 @@ var JsonRpcProvider = /** @class */ (function (_super) {
         // Default URL
         if (!url) {
             if (_this.network.name === networks_1.getNetwork('klaytn').name
+                || _this.network.name === networks_1.getNetwork('baobab').name
                 || _this.network.name === networks_1.getNetwork('aspen').name) {
                 url = 'http://localhost:8551';
             }
@@ -14631,6 +14632,11 @@ var networks = {
         chainId: 1000,
         name: 'klaytn',
         _defaultProvider: klaytnDefaultProvider('http://localhost:8551', 'klaytn')
+    },
+    baobab: {
+        chainId: 1001,
+        name: 'baobab',
+        _defaultProvider: klaytnDefaultProvider('https://api.baobab.klaytn.net:8651', 'baobab')
     },
     aspen: {
         chainId: 1000,

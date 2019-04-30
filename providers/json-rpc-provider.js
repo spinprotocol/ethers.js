@@ -207,6 +207,7 @@ var JsonRpcProvider = /** @class */ (function (_super) {
         // Default URL
         if (!url) {
             if (_this.network.name === networks_1.getNetwork('klaytn').name
+                || _this.network.name === networks_1.getNetwork('baobab').name
                 || _this.network.name === networks_1.getNetwork('aspen').name) {
                 url = 'http://localhost:8551';
             }

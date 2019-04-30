@@ -94,6 +94,11 @@ var networks = {
         name: 'klaytn',
         _defaultProvider: klaytnDefaultProvider('http://localhost:8551', 'klaytn')
     },
+    baobab: {
+        chainId: 1001,
+        name: 'baobab',
+        _defaultProvider: klaytnDefaultProvider('https://api.baobab.klaytn.net:8651', 'baobab')
+    },
     aspen: {
         chainId: 1000,
         name: 'aspen',

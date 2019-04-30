@@ -220,6 +220,7 @@ export class JsonRpcProvider extends BaseProvider {
         // Default URL
         if (!url) {
             if (this.network.name === getNetwork('klaytn').name
+                || this.network.name === getNetwork('baobab').name
                 || this.network.name === getNetwork('aspen').name) {
                 url = 'http://localhost:8551'; 
             } else {
