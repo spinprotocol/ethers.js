@@ -290,7 +290,7 @@ var formatTransactionReceipt = {
     logs: arrayOf(checkTransactionReceiptLog),
     blockNumber: checkNumber,
     confirmations: allowNull(checkNumber, null),
-    cumulativeGasUsed: bignumber_1.bigNumberify,
+    cumulativeGasUsed: allowNull(bignumber_1.bigNumberify, undefined),
     status: allowNull(checkNumber)
 };
 function checkTransactionReceipt(transactionReceipt) {

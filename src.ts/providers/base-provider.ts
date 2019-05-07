@@ -324,7 +324,7 @@ const formatTransactionReceipt = {
     logs: arrayOf(checkTransactionReceiptLog),
     blockNumber: checkNumber,
     confirmations: allowNull(checkNumber, null),
-    cumulativeGasUsed: bigNumberify,
+    cumulativeGasUsed: allowNull(bigNumberify, undefined),
     status: allowNull(checkNumber)
 };
 
